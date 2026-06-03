@@ -22,3 +22,17 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Local config overrides — never commit credentials
+application-local.properties
+application-local.yml
+*.env
+.env.local
+
+# IntelliJ — teams disagree on this, we'll exclude it
+.idea/
+*.iml
+
+# OS
+Thumbs.db
+.DS_Store
