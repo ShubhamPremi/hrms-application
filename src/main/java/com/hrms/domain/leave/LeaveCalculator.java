@@ -44,4 +44,23 @@ public class LeaveCalculator {
                 .mapToLong(this::calculateLeaveDays)
                 .sum();
     }
+
+    public int getMaxAllowedDays(LeavePolicy policy){
+        return switch (policy) {
+            case AnnualLeavePolicy p -> p.getAllowedDaysPerYear();
+            case SickLeavePolicy p      -> p.getAllowedDaysPerYear();
+            case MaternityLeavePolicy p -> p.getAllowedDaysPerYear();
+        };
+    }
+
+    // Practical HRMS use — calculate if leave request exceeds policy limit
+    public boolean exceedsLimit(LeaveRequest request,
+                                LeavePolicy policy,
+                                List<LeaveRequest> existingLeaves) {
+        long daysTaken = countAnnualLeaveTakenThisYear(request.getEmployeeId(), existingLeaves);
+        long daysRequested = calculateLeaveDays(request);
+        int maxAllowed = getMaxAllowedDays(policy);
+
+        return (daysTaken + daysRequested) > maxAllowed;
+    }
 }
