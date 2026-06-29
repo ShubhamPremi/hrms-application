@@ -58,5 +58,20 @@ public class HrmsDataRunner {
         System.out.println("Days: " + calculator.calculateLeaveDays(leave));
         System.out.println("In probation: " + calculator.isInProbation(
                 employees.get(0).getJoiningDate()));
+
+
+        System.out.println("Salary Brackets");
+        System.out.println(analytics.getSalaryBrackets(employees));
+
+        // With Builder — named parameters, order doesn't matter, skip optional fields
+        Employee.builder()
+                .id(1L)
+                .name("Shubham")
+                .email("shubham@hrms.com")
+                .department(Department.ENGINEERING)
+                .salary(80000)
+                .joiningDate(LocalDate.of(2022, 1, 15))
+                .status(EmployeeStatus.ACTIVE)
+                .build();
     }
 }

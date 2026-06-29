@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class EmployeeAnalytics {
@@ -67,6 +68,36 @@ public class EmployeeAnalytics {
                 .filter(emp -> emp.getStatus() == EmployeeStatus.ACTIVE)
                 .sorted(Comparator.comparingDouble(Employee::getSalary).reversed())
                 .limit(n)
+                .collect(Collectors.toList());
+    }
+
+    public Map<String, List<Employee>> getSalaryBrackets(List<Employee> employees){
+        return employees.stream()
+                .filter(emp -> emp.getStatus() == EmployeeStatus.ACTIVE)
+                .collect(Collectors.groupingBy(
+                        emp -> emp.getSalary() < 60000 ? "JUNIOR" :
+                                emp.getSalary() >= 60000 && emp.getSalary() <= 100000 ? "MID" :
+                                        "SENIOR"
+                ));
+    }
+
+    // Java 11 — String improvements
+    public boolean isValidEmail(String email){
+        // isBlank() checks null-safe empty AND whitespace-only strings
+        // strip() uses Unicode whitespace rules, trim() only removes ASCII whitespace
+        // "  shubham@hrms.com  ".strip() → "shubham@hrms.com"
+        // "　shubham@hrms.com　".trim()  → "　shubham@hrms.com　" (Japanese space not removed)
+        // "　shubham@hrms.com　".strip() → "shubham@hrms.com" (Unicode space removed)
+        return email != null && !email.isBlank() && email.strip().contains("@");
+    }
+
+    // Predicate.not() — Java 11, makes stream filters more readable
+    public List<Employee> getInactiveEmployees(List<Employee> employees){
+        // Before Java 11:
+        // .filter(emp -> emp.getStatus() != EmployeeStatus.ACTIVE)
+        // Java 11 — readable as English: "filter where NOT active"
+        return employees.stream()
+                .filter(Predicate.not(emp -> emp.getStatus() == EmployeeStatus.ACTIVE))
                 .collect(Collectors.toList());
     }
 
