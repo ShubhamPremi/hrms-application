@@ -2,6 +2,7 @@ package com.hrms.domain.employee;
 
 import com.hrms.domain.department.Department;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @ToString
+@Builder
 public class Employee {
 
     private Long id;
