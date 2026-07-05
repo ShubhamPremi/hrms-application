@@ -3,11 +3,14 @@ package com.hrms;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.TimeZone;
+
 @SpringBootApplication
 public class HrmsApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(HrmsApplication.class, args);
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        SpringApplication.run(HrmsApplication.class, args);
 	}
 
 }

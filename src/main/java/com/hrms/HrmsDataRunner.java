@@ -1,13 +1,13 @@
 package com.hrms;
 
-import com.hrms.domain.department.Department;
+import com.hrms.department.Department;
 import com.hrms.domain.employee.Employee;
 import com.hrms.domain.employee.EmployeeAnalytics;
-import com.hrms.domain.employee.EmployeeStatus;
+import com.hrms.employee.EmployeeStatus;
 import com.hrms.domain.leave.LeaveCalculator;
 import com.hrms.domain.leave.LeaveRequest;
-import com.hrms.domain.leave.LeaveStatus;
-import com.hrms.domain.leave.LeaveType;
+import com.hrms.leave.LeaveStatus;
+import com.hrms.leave.LeaveType;
 
 import java.time.LocalDate;
 import java.util.List;

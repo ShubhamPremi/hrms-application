@@ -1,5 +1,8 @@
 package com.hrms.domain.leave;
 
+import com.hrms.leave.LeaveStatus;
+import com.hrms.leave.LeaveType;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;

@@ -1,6 +1,7 @@
 package com.hrms.domain.employee;
 
-import com.hrms.domain.department.Department;
+import com.hrms.department.Department;
+import com.hrms.employee.EmployeeStatus;
 
 import java.util.Comparator;
 import java.util.List;

@@ -1,6 +1,7 @@
 package com.hrms.domain.employee;
 
-import com.hrms.domain.department.Department;
+import com.hrms.department.Department;
+import com.hrms.employee.EmployeeStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.hrms.domain.employee;
+package com.hrms.employee;
 
 public enum EmployeeStatus {
     ACTIVE,

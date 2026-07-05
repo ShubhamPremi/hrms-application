@@ -1,4 +1,4 @@
-package com.hrms.domain.leave;
+package com.hrms.leave;
 
 public enum LeaveStatus {
     PENDING,
