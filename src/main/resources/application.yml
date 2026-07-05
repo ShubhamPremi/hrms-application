@@ -3,10 +3,10 @@ spring:
     name: hrms-application
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/hrms_db?TimeZone=UTC
+    url: jdbc:mysql://localhost:3306/hrms_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true&characterEncoding=UTF-8
     username: hrms_user
     password: hrms_password
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
@@ -21,7 +21,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        default_schema: public
+        default_schema: hrms_db
         jdbc:
           time_zone: UTC
 
