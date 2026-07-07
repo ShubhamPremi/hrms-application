@@ -1,5 +1,7 @@
 package com.hrms.domain.leave;
 
+import com.hrms.leave.LeaveStatus;
+import com.hrms.leave.LeaveType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;

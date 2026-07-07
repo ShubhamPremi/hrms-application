@@ -1,4 +1,4 @@
-package com.hrms.domain.department;
+package com.hrms.department;
 
 public enum Department {
     ENGINEERING,
