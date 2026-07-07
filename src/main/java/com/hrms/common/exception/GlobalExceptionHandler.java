@@ -3,6 +3,7 @@ package com.hrms.common.exception;
 import com.hrms.common.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -34,6 +35,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(ApiResponse.error(ex.getMessage(), List.of(ex.getMessage())));
+    }
+
+    // Handles: malformed JSON body, invalid enum values, type mismatches in request body
+    // HTTP 400 — client sent something we cannot deserialize
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<Void>> handleHttpMessageNotReadable(
+            HttpMessageNotReadableException ex) {
+        String message = "Invalid request body — check your JSON format and field values";
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(message, List.of(message)));
     }
 
     // Handles: @Valid failures on request DTOs — blank name, invalid email etc.
