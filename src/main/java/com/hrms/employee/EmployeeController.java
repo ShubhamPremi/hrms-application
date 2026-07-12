@@ -55,10 +55,10 @@ public class EmployeeController {
 
     @GetMapping("/department/{department}")
     public ResponseEntity<ApiResponse<List<EmployeeResponse>>> getByDepartment(
-            @PathVariable Department department) {
+            @PathVariable Long departmentId) {
         return ResponseEntity.ok(
                 ApiResponse.success("Employees retrieved successfully",
-                        employeeService.getEmployeesByDepartment(department)));
+                        employeeService.getEmployeesByDepartment(departmentId)));
     }
 
     @GetMapping("/status/{status}")

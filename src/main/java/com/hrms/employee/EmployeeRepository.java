@@ -2,6 +2,7 @@ package com.hrms.employee;
 
 import com.hrms.department.Department;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
@@ -24,4 +25,14 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
     // SELECT * FROM employees WHERE department = ? AND status = ?
     List<Employee> findByDepartmentAndStatus(Department department, EmployeeStatus status);
+
+    // JOIN FETCH tells Hibernate: load employees AND their departments in ONE query
+    // This eliminates N+1 for the getAllEmployees endpoint
+    // "e.department" refers to the field name in the Employee entity, not the table name
+    @Query("SELECT e FROM Employee e JOIN FETCH e.department")
+    List<Employee> findAllWithDepartment();
+
+    // With status filter
+    @Query("SELECT e FROM Employee e JOIN FETCH e.department WHERE e.status = :status")
+    List<Employee> findAllWithDepartmentByStatus(EmployeeStatus status);
 }

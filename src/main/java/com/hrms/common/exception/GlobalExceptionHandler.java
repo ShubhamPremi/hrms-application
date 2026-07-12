@@ -91,4 +91,20 @@ public class GlobalExceptionHandler {
                         List.of("Contact support if this persists")
                 ));
     }
+
+    @ExceptionHandler(DepartmentNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDepartmentNotFound(
+            DepartmentNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error(ex.getMessage(), List.of(ex.getMessage())));
+    }
+
+    @ExceptionHandler(DepartmentAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDepartmentAlreadyExists(
+            DepartmentAlreadyExistsException ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error(ex.getMessage(), List.of(ex.getMessage())));
+    }
 }

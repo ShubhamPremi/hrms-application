@@ -1,8 +1,10 @@
 package com.hrms.employee;
 
+import com.hrms.common.exception.DepartmentNotFoundException;
 import com.hrms.common.exception.EmailAlreadyExistsException;
 import com.hrms.common.exception.EmployeeNotFoundException;
 import com.hrms.department.Department;
+import com.hrms.department.DepartmentRepository;
 import com.hrms.employee.dto.CreateEmployeeRequest;
 import com.hrms.employee.dto.EmployeeResponse;
 import com.hrms.employee.dto.UpdateEmployeeRequest;
@@ -19,6 +21,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
 
+    private final DepartmentRepository departmentRepository;
+
     @Override
     @Transactional
     public EmployeeResponse createEmployee(CreateEmployeeRequest request) {
@@ -31,11 +35,14 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new EmailAlreadyExistsException(request.email());
         }
 
+        Department department = departmentRepository.findById(request.departmentId())
+                .orElseThrow(() -> new DepartmentNotFoundException(request.departmentId()));
+
         Employee employee = Employee.builder()
                 .name(request.name())
                 .email(request.email().toLowerCase().strip())
                 .designation(request.designation())
-                .department(request.department())
+                .department(department)
                 .salary(request.salary())
                 .joiningDate(request.joiningDate())
                 .status(EmployeeStatus.ACTIVE)
@@ -62,10 +69,20 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .orElseThrow(() -> new EmployeeNotFoundException(email));
     }
 
+//    @Override
+//    @Transactional(readOnly = true)
+//    public List<EmployeeResponse> getAllEmployees() {
+//        return employeeRepository.findAll()
+//                .stream()
+//                .map(EmployeeResponse::from)
+//                .toList();
+//    }
+
+    // Using JOIN FETCH method to resolve the N+1 problem
     @Override
     @Transactional(readOnly = true)
     public List<EmployeeResponse> getAllEmployees() {
-        return employeeRepository.findAll()
+        return employeeRepository.findAllWithDepartment()
                 .stream()
                 .map(EmployeeResponse::from)
                 .toList();
@@ -73,7 +90,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<EmployeeResponse> getEmployeesByDepartment(Department department) {
+    public List<EmployeeResponse> getEmployeesByDepartment(Long departmentId) {
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new DepartmentNotFoundException(departmentId));
         return employeeRepository.findByDepartment(department)
                 .stream()
                 .map(EmployeeResponse::from)
