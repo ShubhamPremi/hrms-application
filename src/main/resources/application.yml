@@ -34,6 +34,14 @@ spring:
 server:
   port: 8080
 
+application:
+  security:
+    jwt:
+      secret-key: 404D635166546A576E5A7234753778214125442A472D4B6150645367566B5970
+      expiration: 86400000        # 24 hours in milliseconds
+      refresh-token:
+        expiration: 604800000     # 7 days in milliseconds
+
 logging:
   level:
     org.hibernate.SQL: DEBUG
