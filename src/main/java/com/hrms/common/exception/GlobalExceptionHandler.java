@@ -8,6 +8,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 
 import java.util.List;
 
@@ -90,5 +92,56 @@ public class GlobalExceptionHandler {
                         "An unexpected error occurred. Please try again later.",
                         List.of("Contact support if this persists")
                 ));
+    }
+
+    @ExceptionHandler(DepartmentNotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDepartmentNotFound(
+            DepartmentNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error(ex.getMessage(), List.of(ex.getMessage())));
+    }
+
+    @ExceptionHandler(DepartmentAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<Void>> handleDepartmentAlreadyExists(
+            DepartmentAlreadyExistsException ex) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error(ex.getMessage(), List.of(ex.getMessage())));
+    }
+
+    // Handles: valid token but insufficient role
+// e.g. EMPLOYEE trying to DELETE an employee — authenticated but not authorised
+// HTTP 403 Forbidden — you are known but not allowed
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAccessDenied(
+            AccessDeniedException ex) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(ApiResponse.error(
+                        "Access denied — you do not have permission to perform this action",
+                        List.of(ex.getMessage())));
+    }
+
+    // Handles: bad credentials on login
+// HTTP 401 Unauthorized — not authenticated
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAuthenticationException(
+            AuthenticationException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponse.error(
+                        "Authentication failed — invalid email or password",
+                        List.of(ex.getMessage())));
+    }
+
+    // Handles: business rule violations — invalid leave dates, insufficient balance
+// HTTP 400 — client sent a valid request but it violates a business rule
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(
+            IllegalArgumentException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(ex.getMessage(), List.of(ex.getMessage())));
     }
 }

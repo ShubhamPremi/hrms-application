@@ -32,8 +32,8 @@ public class Employee {
     @Column(nullable = false, length = 100)
     private String designation;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id", nullable = false)
     private Department department;
 
     @Column(nullable = false, precision = 15, scale = 2)

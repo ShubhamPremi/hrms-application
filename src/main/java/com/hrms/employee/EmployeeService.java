@@ -16,7 +16,7 @@ public interface EmployeeService {
 
     List<EmployeeResponse> getAllEmployees();
 
-    List<EmployeeResponse> getEmployeesByDepartment(Department department);
+    List<EmployeeResponse> getEmployeesByDepartment(Long departmentId);
 
     List<EmployeeResponse> getEmployeesByStatus(EmployeeStatus status);
 

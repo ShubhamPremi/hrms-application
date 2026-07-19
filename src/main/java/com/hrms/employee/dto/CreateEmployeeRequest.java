@@ -20,8 +20,8 @@ public record CreateEmployeeRequest(
         @Size(max = 100, message = "Designation must not exceed 100 characters")
         String designation,
 
-        @NotNull(message = "Department is required")
-        Department department,
+        @NotNull(message = "Department ID is required")
+        Long departmentId,
 
         @NotNull(message = "Salary is required")
         @DecimalMin(value = "0.0", inclusive = false, message = "Salary must be greater than 0")

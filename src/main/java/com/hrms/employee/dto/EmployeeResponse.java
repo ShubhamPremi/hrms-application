@@ -12,12 +12,16 @@ public record EmployeeResponse(
         String name,
         String email,
         String designation,
-        Department department,
+        DepartmentInfo department,
         BigDecimal salary,
         LocalDate joiningDate,
         EmployeeStatus status,
         LocalDateTime createdAt
 ) {
+    // Nested record — a record inside a record is perfectly valid Java 17
+    public record DepartmentInfo(Long id, String name) {}
+
+
     // Static factory — converts Entity to DTO in one place
     // WHY: the controller and service never access entity fields directly
     // All mapping logic lives here — one place to change when the entity changes
@@ -27,7 +31,10 @@ public record EmployeeResponse(
                 employee.getName(),
                 employee.getEmail(),
                 employee.getDesignation(),
-                employee.getDepartment(),
+                new DepartmentInfo(
+                        employee.getDepartment().getId(),     // ← this triggers lazy load
+                        employee.getDepartment().getName()    // ← if not fetched, N+1 starts here
+                ),
                 employee.getSalary(),
                 employee.getJoiningDate(),
                 employee.getStatus(),
