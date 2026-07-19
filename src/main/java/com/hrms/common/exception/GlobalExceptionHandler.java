@@ -134,4 +134,14 @@ public class GlobalExceptionHandler {
                         "Authentication failed — invalid email or password",
                         List.of(ex.getMessage())));
     }
+
+    // Handles: business rule violations — invalid leave dates, insufficient balance
+// HTTP 400 — client sent a valid request but it violates a business rule
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(
+            IllegalArgumentException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(ex.getMessage(), List.of(ex.getMessage())));
+    }
 }

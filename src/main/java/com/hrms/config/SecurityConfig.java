@@ -75,6 +75,17 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE,
                                 "/api/v1/employees/**").hasAnyRole("ADMIN", "HR")
 
+                        // Leave — employees can view their own, HR/Admin can manage all
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/v1/leave/**").authenticated()
+                        .requestMatchers(HttpMethod.POST,
+                                "/api/v1/leave/**").authenticated()
+                        .requestMatchers("/api/v1/leave/pending").hasAnyRole("ADMIN", "HR")
+                        .requestMatchers(HttpMethod.PUT,
+                                "/api/v1/leave/*/approve").hasAnyRole("ADMIN", "HR")
+                        .requestMatchers(HttpMethod.PUT,
+                                "/api/v1/leave/*/reject").hasAnyRole("ADMIN", "HR")
+
                         // Everything else requires authentication
                         .anyRequest().authenticated()
                 )
