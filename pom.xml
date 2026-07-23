@@ -207,6 +207,18 @@
 					</execution>
 				</executions>
 			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>
+                        -XX:+EnableDynamicAgentLoading
+                        -Duser.timezone=UTC
+                    </argLine>
+                </configuration>
+            </plugin>
+            <!-- This tells the JVM to allow Mockito's agent loading explicitly instead of doing it silently.
+            Also sets UTC timezone for tests so date assertions do not break in CI. -->
 		</plugins>
 	</build>
 
