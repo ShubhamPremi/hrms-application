@@ -138,6 +138,13 @@
             <artifactId>mysql</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- RestAssured — fluent HTTP testing for integration tests -->
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
     <!-- TestContainers BOM — manages all TestContainers versions consistently -->
