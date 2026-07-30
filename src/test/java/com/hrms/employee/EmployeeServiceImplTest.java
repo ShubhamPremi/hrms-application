@@ -12,6 +12,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,6 +28,8 @@ class EmployeeServiceImplTest {
 
     @Mock private EmployeeRepository employeeRepository;
     @Mock private DepartmentRepository departmentRepository;
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
     @InjectMocks private EmployeeServiceImpl employeeService;
 
     private Department engineering;
