@@ -3,11 +3,13 @@ package com.hrms.leave;
 import com.hrms.common.exception.EmployeeNotFoundException;
 import com.hrms.employee.Employee;
 import com.hrms.employee.EmployeeRepository;
+import com.hrms.employee.event.LeaveApprovedEvent;
 import com.hrms.leave.dto.ApplyLeaveRequest;
 import com.hrms.leave.dto.LeaveBalanceResponse;
 import com.hrms.leave.dto.LeaveRequestResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -22,6 +24,7 @@ public class LeaveServiceImpl implements LeaveService {
     private final LeaveRequestRepository leaveRequestRepository;
     private final LeaveBalanceRepository leaveBalanceRepository;
     private final EmployeeRepository employeeRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -135,6 +138,8 @@ public class LeaveServiceImpl implements LeaveService {
         }
 
         log.info("Leave request {} approved", leaveRequestId);
+
+        eventPublisher.publishEvent(new LeaveApprovedEvent(this, leaveRequest, "approver"));
         return LeaveRequestResponse.from(leaveRequest);
     }
 

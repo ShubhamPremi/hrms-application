@@ -1,5 +1,6 @@
 package com.hrms.employee;
 
+import com.hrms.common.aop.LogExecutionTime;
 import com.hrms.common.exception.DepartmentNotFoundException;
 import com.hrms.common.exception.EmailAlreadyExistsException;
 import com.hrms.common.exception.EmployeeNotFoundException;
@@ -8,8 +9,10 @@ import com.hrms.department.DepartmentRepository;
 import com.hrms.employee.dto.CreateEmployeeRequest;
 import com.hrms.employee.dto.EmployeeResponse;
 import com.hrms.employee.dto.UpdateEmployeeRequest;
+import com.hrms.employee.event.EmployeeCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -22,6 +25,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     private final DepartmentRepository departmentRepository;
+
+    private final ApplicationEventPublisher eventPublisher;
+
 
     @Override
     @Transactional
@@ -50,6 +56,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         Employee saved = employeeRepository.save(employee);
         log.info("Employee created with id: {}", saved.getId());
+
+        // Publish the event — EmployeeServiceImpl does NOT know who listens
+        // WHY: adding a new on-created action never requires changing this method
+        eventPublisher.publishEvent(new EmployeeCreatedEvent(this, saved, "system"));
+
         return EmployeeResponse.from(saved);
     }
 
@@ -80,6 +91,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     // Using JOIN FETCH method to resolve the N+1 problem
     @Override
+    @LogExecutionTime
     @Transactional(readOnly = true)
     public List<EmployeeResponse> getAllEmployees() {
         return employeeRepository.findAllWithDepartment()

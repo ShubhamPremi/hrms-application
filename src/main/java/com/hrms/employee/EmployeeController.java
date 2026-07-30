@@ -5,6 +5,8 @@ import com.hrms.department.Department;
 import com.hrms.employee.dto.CreateEmployeeRequest;
 import com.hrms.employee.dto.EmployeeResponse;
 import com.hrms.employee.dto.UpdateEmployeeRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +19,15 @@ import java.util.List;
 @RequestMapping("/api/v1/employees")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Employees", description = "Employee management endpoints")
 public class EmployeeController {
 
     private final EmployeeService employeeService;
 
+    @Operation(
+            summary = "Create employee",
+            description = "Creates a new employee record. Requires HR or ADMIN role."
+    )
     @PostMapping
     public ResponseEntity<ApiResponse<EmployeeResponse>> createEmployee(
             @Valid @RequestBody CreateEmployeeRequest request) {
@@ -30,6 +37,7 @@ public class EmployeeController {
                 .body(ApiResponse.success("Employee created successfully", response));
     }
 
+    @Operation(summary = "Get all employees", description = "Returns all non-terminated employees")
     @GetMapping
     public ResponseEntity<ApiResponse<List<EmployeeResponse>>> getAllEmployees() {
         List<EmployeeResponse> employees = employeeService.getAllEmployees();
@@ -37,6 +45,7 @@ public class EmployeeController {
                 ApiResponse.success("Employees retrieved successfully", employees));
     }
 
+    @Operation(summary = "Get employee by ID")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<EmployeeResponse>> getEmployeeById(
             @PathVariable Long id) {
